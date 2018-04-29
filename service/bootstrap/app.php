@@ -59,6 +59,12 @@ $app->configure('mail');
 // load database configurations
 $app->configure('database');
 
+// load filesystem configurations
+$app->configure('filesystems');
+
+// load medialibrary configurations
+$app->configure('medialibrary');
+
 /*
 |--------------------------------------------------------------------------
 | Register Middleware
@@ -92,7 +98,7 @@ $app->configure('database');
 |
 */
 
-// $app->register(App\Providers\AppServiceProvider::class);
+$app->register(App\Providers\AppServiceProvider::class);
 $app->register(App\Providers\AuthServiceProvider::class);
 $app->register(App\Providers\EventServiceProvider::class);
 $app->register(App\Providers\RepositoriesServiceProvider::class);
@@ -100,6 +106,8 @@ $app->register(Laravel\Passport\PassportServiceProvider::class);
 $app->register(Dusterio\LumenPassport\PassportServiceProvider::class);
 $app->register(Barryvdh\Cors\ServiceProvider::class);
 $app->register(\Illuminate\Mail\MailServiceProvider::class);
+$app->register(Spatie\MediaLibrary\MediaLibraryServiceProvider::class);
+
 
 LumenPassport::routes($app);
 
