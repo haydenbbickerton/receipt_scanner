@@ -2,4 +2,10 @@
 
 sed -i "s/xdebug\.remote_host\=.*/xdebug\.remote_host\=$XDEBUG_HOST/g" /etc/php/7.1/mods-available/xdebug.ini
 
+echo "Setting permissions for the docker container..."
+/usr/local/bin/permission_fix || true
+chown -R $DOCKER_USER:$DOCKER_GROUP $VOLUME || true
+echo "Symlinking Laravels public storage"
+ln -sf /var/www/html/storage/app/public /var/www/html/public/storage
+
 /usr/bin/supervisord

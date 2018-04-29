@@ -33,6 +33,9 @@ COPY default /etc/nginx/sites-available/default
 COPY php-fpm.conf /etc/php/7.1/fpm/php-fpm.conf
 COPY xdebug.ini /etc/php/7.1/mods-available/xdebug.ini
 
+COPY permission_fix /usr/local/bin/permission_fix
+RUN chmod +x /usr/local/bin/permission_fix
+
 COPY start-container /usr/local/bin/start-container
 RUN chmod +x /usr/local/bin/start-container
 
