@@ -2,10 +2,12 @@
 
 namespace App\Providers;
 
+use App\Models\Receipt;
 use App\Models\User;
 use Laravel\Passport\Passport;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
+use App\Policies\ReceiptPolicy;
 use App\Policies\UserPolicy;
 
 class AuthServiceProvider extends ServiceProvider
@@ -47,9 +49,16 @@ class AuthServiceProvider extends ServiceProvider
             'users:write' => 'Users scope for writing records',
             'users:create' => 'Users scope for creating records',
             'users:delete' => 'Users scope for deleting records',
+            'receipts' => 'Receipts scope',
+            'receipts:list' => 'Receipts scope',
+            'receipts:read' => 'Receipts scope for reading records',
+            'receipts:write' => 'Receipts scope for writing records',
+            'receipts:create' => 'Receipts scope for creating records',
+            'receipts:delete' => 'Receipts scope for deleting records'
         ]);
 
         //Register all policies here
         Gate::policy(User::class, UserPolicy::class);
+        Gate::policy(Receipt::class, ReceiptPolicy::class);
     }
 }
