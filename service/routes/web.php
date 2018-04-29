@@ -25,6 +25,7 @@ $router->get('appKey', function () {
 $router->post('accessToken', 'AccessTokenController@createAccessToken');
 
 $router->group(['middleware' => ['auth:api', 'throttle:60']], function () use ($router) {
+    # Users
     $router->post('users', [
         'uses'       => 'UserController@store',
         'middleware' => "scope:users,users:create"
@@ -45,5 +46,27 @@ $router->group(['middleware' => ['auth:api', 'throttle:60']], function () use ($
         'uses'       => 'UserController@destroy',
         'middleware' => "scope:users,users:delete"
     ]);
-});
 
+    # Receipts
+    $router->post('receipts', [
+        'uses'       => 'ReceiptController@store',
+        'middleware' => "scope:receipts,receipts:create"
+    ]);
+    $router->get('receipts',  [
+        'uses'       => 'ReceiptController@index',
+        'middleware' => "scope:receipts,receipts:list"
+    ]);
+    $router->get('receipts/{id}', [
+        'uses'       => 'ReceiptController@show',
+        'middleware' => "scope:receipts,receipts:read"
+    ]);
+    $router->put('receipts/{id}', [
+        'uses'       => 'ReceiptController@update',
+        'middleware' => "scope:receipts,receipts:write"
+    ]);
+    $router->delete('receipts/{id}', [
+        'uses'       => 'ReceiptController@destroy',
+        'middleware' => "scope:receipts,receipts:delete"
+    ]);
+
+});
