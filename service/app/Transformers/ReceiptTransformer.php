@@ -12,6 +12,9 @@ class ReceiptTransformer extends TransformerAbstract
         return [
             'id'        => $receipt->uid,
             'userId'    => $receipt->userId,
+            'name'      => $receipt->name,
+            'notes'     => $receipt->notes,
+            'category'  => $receipt->category,
             'data'      => $receipt->data,
             'mediaUrl'  => $receipt->getFirstMediaUrl("receipts"),
             'createdAt' => (string) $receipt->created_at,

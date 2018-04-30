@@ -5,7 +5,7 @@ namespace App\Events\ReceiptEvents;
 use App\Events\Event;
 use App\Models\Receipt;
 
-class ReceiptCreatedEvent extends Event
+class ReceiptCreated extends Event
 {
     /**
      * Instance of Receipt

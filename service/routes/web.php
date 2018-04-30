@@ -22,7 +22,7 @@ $router->get('appKey', function () {
 });
 
 // route for creating access_token
-$router->post('accessToken', 'AccessTokenController@createAccessToken');
+$router->post('auth', 'AccessTokenController@createAccessToken');
 
 $router->group(['middleware' => ['auth:api', 'throttle:60']], function () use ($router) {
     # Users

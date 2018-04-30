@@ -91,11 +91,9 @@ class ReceiptController extends Controller
             return $this->sendCustomResponse(500, 'Error occurred on uploading Receipt image');
         }
 
-        $data = [
-            'userId'    =>  $request->input('userId'),
-            'filePath'  =>  $request->file('receipt')->getRealPath(), // Temporary path, it will be moved once saved
-            'fileExt'   =>  $request->file('receipt')->guessExtension()
-        ];
+        $data = $request->except('receipt');
+        $data['filePath'] = $request->file('receipt')->getRealPath(); // Temporary path, it will be moved once saved
+        $data['fileExt'] = $request->file('receipt')->guessExtension();
 
         $receipt = $this->receiptRepository->save($data);
 
@@ -168,9 +166,23 @@ class ReceiptController extends Controller
      */
     private function storeRequestValidationRules(Request $request)
     {
+        $categories = [ // This shouldn't be defined in controller, it should be in the model instead.
+            'airfare',
+            'vehicle rental',
+            'fuel',
+            'lodging',
+            'meals',
+            'phone',
+            'entertainment',
+            'weapons',
+            'other'
+        ];
        return [
-           'userId'     => 'required|exists:users,id',
-           'receipt'    => 'required|mimes:jpeg,png,pdf|max:10000'  // 10 MB
+           'userId'     => 'required|exists:users,uid',
+           'receipt'    => 'required|file|mimes:jpeg,png,pdf|max:10000',  // 10 MB
+           'name'       => 'required|string|max:32',
+           'notes'      => 'string|max:1000',
+           'category'   => 'required|in:' . implode(',', $categories),
         ];
     }
 

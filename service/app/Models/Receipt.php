@@ -27,6 +27,9 @@ class Receipt extends Model implements HasMedia
     protected $fillable = [
         'uid',
         'userId',
+        'name',
+        'notes',
+        'category',
         'data',     // JSON returned by the Taggun API
     ];
 

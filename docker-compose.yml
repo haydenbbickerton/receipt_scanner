@@ -12,13 +12,25 @@ services:
     ports:
       - "${APP_PORT}:80"
     volumes:
-      - .:/var/www/html
+      - ./service:/var/www/html
     networks:
       - restapi_docker
-  restapi-redis:
-    image: redis:alpine
-    networks:
-      - restapi_docker
+    environment:
+      VOLUME: '/var/www/html'
+      DOCKER_USER: 'www-data'
+      DOCKER_GROUP: 'www-data'
+      HOST_USER_ID: 1000
+      HOST_GROUP_ID: 1000
+  client:
+    image: nginx:stable-alpine
+    volumes:
+      - ./client/dist:/usr/share/nginx/html
+    ports:
+      - "4000:80"
+  # restapi-redis:
+  #   image: redis:alpine
+  #   networks:
+  #     - restapi_docker
   restapi-mysql:
     image: mysql:5.7
     ports:
