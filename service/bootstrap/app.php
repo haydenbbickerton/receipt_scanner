@@ -65,6 +65,9 @@ $app->configure('filesystems');
 // load medialibrary configurations
 $app->configure('medialibrary');
 
+// load taggun configurations
+$app->configure('taggun');
+
 /*
 |--------------------------------------------------------------------------
 | Register Middleware
@@ -107,6 +110,7 @@ $app->register(Dusterio\LumenPassport\PassportServiceProvider::class);
 $app->register(Barryvdh\Cors\ServiceProvider::class);
 $app->register(\Illuminate\Mail\MailServiceProvider::class);
 $app->register(Spatie\MediaLibrary\MediaLibraryServiceProvider::class);
+$app->register(\Illuminate\Redis\RedisServiceProvider::class);
 
 
 LumenPassport::routes($app);

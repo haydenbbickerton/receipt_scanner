@@ -65,4 +65,12 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     {
         return (isset($this->role) ? $this->role : self::BASIC_ROLE) == self::ADMIN_ROLE;
     }
+
+    /**
+     * Get the receipts for this user.
+     */
+    public function receipts()
+    {
+        return $this->hasMany('App\Models\Receipt', 'userId');
+    }
 }

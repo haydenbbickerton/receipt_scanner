@@ -36,6 +36,15 @@ class Receipt extends Model implements HasMedia
      * @var array
      */
     protected $casts = [
+        'userId' => 'integer',
         'data' => 'array',
     ];
+
+    /**
+     * Get the user that owns the receipt.
+     */
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User', 'userId');
+    }
 }

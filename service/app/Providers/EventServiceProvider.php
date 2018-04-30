@@ -14,8 +14,8 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        'App\Events\SomeEvent' => [
-            'App\Listeners\EventListener',
+        'App\Events\ReceiptEvents\ReceiptCreated' => [
+            'App\Listeners\ProcessReceipt',
         ],
     ];
 
@@ -25,7 +25,6 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $subscribe = [
-        ReceiptEventsListener::class,
         UserEventsListener::class,
     ];
 }

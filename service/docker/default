@@ -8,6 +8,8 @@ server {
 
     server_name restapi.app;
 
+    client_max_body_size 20M;
+
     charset utf-8;
 
     location = /favicon.ico { log_not_found off; access_log off; }

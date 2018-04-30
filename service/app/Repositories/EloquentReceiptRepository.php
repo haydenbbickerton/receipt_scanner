@@ -4,7 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Receipt;
 use App\Repositories\Contracts\ReceiptRepository;
-use App\Events\ReceiptEvents\ReceiptCreatedEvent;
+use App\Events\ReceiptEvents\ReceiptCreated;
 
 class EloquentReceiptRepository extends AbstractEloquentRepository implements ReceiptRepository
 {
@@ -24,13 +24,14 @@ class EloquentReceiptRepository extends AbstractEloquentRepository implements Re
         $filePath = array_pull($data, 'filePath');
         $receipt = parent::save($data);
 
-
+        $newName = str_random('16');
         $receipt
            ->addMedia($filePath)
-           ->usingFileName(str_random('16').'.'.$fileExt)
-           ->toMediaCollection();
+           ->usingName($newName)
+           ->usingFileName($newName.'.'.$fileExt)
+           ->toMediaCollection('receipts');
 
-        \Event::fire(new ReceiptCreatedEvent($receipt));
+        \Event::fire(new ReceiptCreated($receipt));
 
         return $receipt;
     }
