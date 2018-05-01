@@ -8,7 +8,7 @@ const receipts = new Vapi({
   axios: http,
     state: {
       receipt: null,
-      rawReceipts: []
+      receipts: []
     }
   })
   // Step 3
@@ -22,7 +22,7 @@ const receipts = new Vapi({
     property: "rawReceipts",
     path: "/receipts",
     onSuccess: (state, payload) => {
-      state.rawReceipts = payload.data.data
+      state.receipts = payload.data.data
     }
   })
   .post({
@@ -48,16 +48,7 @@ const receipts = new Vapi({
 
 
 receipts.getters = {
-  receipts: (state, getters) => {
-    // Between my api, tagguns api, and pagination, there's too many nested "data"s.
-    // Clean that up a bit to make things easier.
-    return _.forEach(state.rawReceipts, (receipt) =>{
-      let data = _.mapValues(receipt.data, 'data')
-      _.unset(receipt, 'data')
-      _.assignIn(receipt, data)
-      return receipt
-    })
-  }
+  receipts: state => state.receipts
 }
 
 export default receipts
