@@ -4,11 +4,7 @@
       <div slot="header" class="clearfix">
         <span>Receipts</span>
       </div>
-
-      <data-tables :data="receipts" :actions-def="actionsDef" :action-col-def="actionColDef">
-        <el-table-column v-for="title in titles" :prop="title.prop" :key="title.prop" :label="title.label" sortable="custom">
-        </el-table-column>
-      </data-tables>
+      <receipts-table :receipts="receipts"></receipts-table>
     </el-card>
 
     <!-- We'll use the dialog to switch out our content on this page -->
@@ -28,12 +24,14 @@
 </template>
 
 <script>
+import ReceiptsTable from '@/components/ReceiptsTable'
 import UploadReceiptForm from '@/components/UploadReceiptForm'
 import { mapGetters, mapActions } from 'vuex'
 import config from 'config'
 
 export default {
     components: {
+        ReceiptsTable,
         UploadReceiptForm
     },
     mounted() {
@@ -41,74 +39,10 @@ export default {
     },
     data() {
         return {
-            yea: [],
             activeReceiptId: null,
             baseUrl: config.webService.baseUrl,
             dialogContent: null,
             dialogIsVisible: false,
-            titles: [
-                {
-                    prop:  'name',
-                    label: 'Name'
-                },
-                {
-                    prop:  'merchantName',
-                    label: 'Merchant'
-                },
-                {
-                    prop:  'category',
-                    label: 'Category'
-                },
-                {
-                    prop:  'totalAmount',
-                    label: 'Amount'
-                },
-                {
-                    prop:  'date',
-                    label: 'Date'
-                },
-            ],
-            actionsDef: {
-                def: [{
-                  name: 'upload',
-                  handler: () => {
-                    this.dialogContent = 'upload_form'
-                  },
-                  icon: 'upload'
-                }]
-            },
-            actionColDef: {
-                label: 'Actions',
-                def: [{
-                    handler: row => {
-                        console.log(row)
-                        this.activeReceiptId = row.id
-                        this.dialogContent = 'receipt'
-                    },
-                    name: 'View'
-                },
-                {
-                    handler: row => {
-                        // this is janky. And belongs somewhere else.
-                        this.$confirm('This will permanently delete the file. Continue?', 'Warning', {
-                          confirmButtonText: 'OK',
-                          cancelButtonText: 'Cancel',
-                          type: 'warning'
-                        }).then(() => {
-                            const params = { id: row.id }
-                            this.deleteReceipt({ params }).then((resp) => {
-                                this.$message({
-                                    type: 'success',
-                                    message: 'Delete completed'
-                                })
-                            })
-                            this.getReceipts()
-                        })
-                  },
-                  name: 'Delete'
-                }
-                ]
-            }
         }
     },
     computed: {
