@@ -7,17 +7,15 @@
 </template>
 
 <script>
-// import request from '@/utils/request'
-
 export default {
   name: 'app',
-  // mounted () {
-  //   // Do a blank request to trigger login if they aren't
-  //   request.get('/')
+  created () {
+    // Do a blank request to trigger login if they aren't
+    this.$store.dispatch('user/request')
 
-  //   // Start listening
-  //   this.$store.dispatch('socket/listenToSocket')
-  // }
+    // Fetch receipts on startup
+    this.$store.dispatch('getReceipts')
+  }
 }
 </script>
 
