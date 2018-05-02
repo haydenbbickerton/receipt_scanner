@@ -30,6 +30,10 @@ class Receipt extends Model implements HasMedia
         'name',
         'notes',
         'category',
+        'totalAmount',
+        'taxAmount',
+        'merchantName',
+        'date',
         'data',     // JSON returned by the Taggun API
     ];
 
@@ -39,8 +43,10 @@ class Receipt extends Model implements HasMedia
      * @var array
      */
     protected $casts = [
-        'userId' => 'integer',
-        'data' => 'array',
+        'userId'        => 'integer',
+        'data'          => 'array',
+        'totalAmount'   => 'float',
+        'taxAmount'     => 'float',
     ];
 
     /**

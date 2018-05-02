@@ -28,23 +28,28 @@ class ProcessReceipt implements ShouldQueue
      */
     public function handle(ReceiptCreated $event)
     {
-       $receipt = $event->receipt;
-       $image = $receipt->getFirstMedia("receipts");
+        $receipt = $event->receipt;
+        $image = $receipt->getFirstMedia("receipts");
 
-       $data = $this->sendToTaggun($image->getPath(), $image->mime_type);
+        $data = $this->sendToTaggun($image->getPath(), $image->mime_type);
+        $data = json_decode($data, true);
 
-       $receipt->data = $data;
-       $receipt->save();
-
+        $receipt->update([
+            'date'              => array_get($data, 'date.data', null),
+            'merchantName'      => array_get($data, 'merchantName.data', null),
+            'taxAmount'         => array_get($data, 'taxAmount.data', null),
+            'totalAmount'       => array_get($data, 'totalAmount.data', null),
+        ]);
+        $receipt->save();
     }
 
     public function sendToTaggun($filePath, $mimeType, $verbose = false) {
 
-        $url = 'https://api.taggun.io/api/receipt/v1/' . ($verbose ? 'verbose/file' : 'simple/file');
+        $url = config('taggun.api.url') . ($verbose ? 'verbose/file' : 'simple/file');
 
         $headers = [
             'Accept'    =>  'application/json',
-            'apikey'    =>  config('taggun.apiKey')
+            'apikey'    =>  config('taggun.api.key')
         ];
 
         $body = array(
@@ -53,6 +58,6 @@ class ProcessReceipt implements ShouldQueue
 
         $response = \Unirest\Request::post($url, $headers, $body);
 
-        return $response->body;
+        return $response->raw_body;
     }
 }

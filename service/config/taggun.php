@@ -6,5 +6,8 @@ return [
      | Taggun
      |--------------------------------------------------------------------------
      */
-    'apiKey' => env('TAGGUN_API_KEY', ''),
+    'api' => [
+        'key'   => env('TAGGUN_API_KEY', ''),
+        'url'   => 'https://api.taggun.io/api/receipt/v1/'
+    ]
 ];
