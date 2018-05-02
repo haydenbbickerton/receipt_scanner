@@ -179,7 +179,7 @@ class ReceiptController extends Controller
         ];
        return [
            'userId'     => 'required|exists:users,uid',
-           'receipt'    => 'required|file|mimes:jpeg,png,pdf|max:10000',  // 10 MB
+           'receipt'    => 'required|file|mimes:jpeg,png|max:10000',  // 10 MB
            'name'       => 'required|string|max:32',
            'notes'      => 'string|max:1000',
            'category'   => 'required|in:' . implode(',', $categories),
