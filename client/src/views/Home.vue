@@ -17,7 +17,7 @@
       class="receipt-dialog">
             <upload-receipt-form
             v-on:receipt-uploaded="getReceipts"
-            v-on:receipt-form-finished="uploadDialogVisible = false"></upload-receipt-form>
+            v-on:receipt-form-finished="uploadDialogVisible = false" v-if="uploadDialogVisible"></upload-receipt-form>
     </el-dialog>
   </div>
 </template>
