@@ -16,14 +16,13 @@ class CreateReceiptsTable extends Migration
         Schema::create('receipts', function (Blueprint $table) {
             $table->increments('id');
             $table->string('uid', 36)->unique();
-            $table->integer('userId')->unsigned();
+            $table->string('userId', 36);
             $table->json('data')->nullable();
             $table->timestamps();
 
             $table->foreign('userId')
-                ->references('id')->on('users')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
+                ->references('uid')->on('users')
+                ->onDelete('cascade');
         });
     }
 
