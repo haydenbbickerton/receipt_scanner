@@ -3,21 +3,28 @@
     <el-card class="box-card">
       <div slot="header" class="clearfix">
         <span>Receipts</span>
-        <el-button type="primary" class="fr" @click="uploadDialogVisible = true">Upload</el-button>
+        <span style="float: right;">
+            <el-button @click="exportTable">Export</el-button>
+            <el-button type="primary" @click="uploadDialogVisible = true">Upload</el-button>
+        </span>
       </div>
-      <receipts-table></receipts-table>
+      <receipts-table :receipts="receipts" v-on:table-data-modified="currentTableData = $event"></receipts-table>
     </el-card>
 
     <el-dialog
       title="Upload Receipt"
       :visible.sync="uploadDialogVisible"
       class="receipt-dialog">
-            <upload-receipt-form v-on:receipt-uploaded="afterUpload"></upload-receipt-form>
+            <upload-receipt-form
+            v-on:receipt-uploaded="getReceipts"
+            v-on:receipt-form-finished="uploadDialogVisible = false"></upload-receipt-form>
     </el-dialog>
   </div>
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex'
+import CsvExport from '@/utils/csv_export'
 import ReceiptsTable from '@/components/ReceiptsTable'
 import UploadReceiptForm from '@/components/UploadReceiptForm'
 
@@ -28,13 +35,24 @@ export default {
     },
     data() {
         return {
+            currentTableData: {},
             uploadDialogVisible: false,
         }
     },
+    computed: {
+        ...mapGetters(['receipts'])
+    },
     methods: {
-        afterUpload () {
-
-        }
+        exportTable() {
+            this.$prompt('Enter a filename for this export', 'Filename').then(value => {
+                // TODO: make sure there is data in the table first
+                const columns = Object.keys(this.currentTableData[0])
+                CsvExport(this.currentTableData, columns, value.value)
+            })
+        },
+        ...mapActions([
+          "getReceipts"
+        ])
     }
 }
 </script>
