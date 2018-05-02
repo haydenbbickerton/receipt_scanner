@@ -1,24 +1,22 @@
 <template>
   <div class="form-wrapper">
     <el-form :model="receiptForm" :rules="rules" ref="receiptForm" label-width="120px" v-loading="pending">
-      <el-form-item label="Name" prop="name">
+      <el-form-item label="Name" prop="name" :error="serverFormErrors.name">
         <el-input v-model="receiptForm.name"></el-input>
       </el-form-item>
       <el-form-item label="Category" prop="category">
-        <el-select v-model="receiptForm.category" placeholder="Category">
+        <el-select v-model="receiptForm.category" placeholder="Category" :error="serverFormErrors.category">
           <el-option v-for="category in categories" :key="category" :label="category" :value="category"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="Notes" prop="notes">
+      <el-form-item label="Notes" prop="notes" :error="serverFormErrors.notes">
         <el-input type="textarea" v-model="receiptForm.notes"></el-input>
       </el-form-item>
-      <el-form-item label="Receipt" prop="receipt">
-        <span>(jpeg, png, pdf)</span>
+      <el-form-item label="Receipt Image" prop="receipt" :error="serverFormErrors.receipt">
         <el-input type="file" v-model="receiptForm.receipt" ref="rfile" class="file-input"></el-input>
       </el-form-item>
-
-        <el-button type="primary" @click="submitForm()">Create</el-button>
-        <el-button @click="resetForm()">Reset</el-button>
+        <el-button type="primary" @click="submitForm()">Upload</el-button>
+        <el-button @click="$emit('receipt-form-finished')">Cancel</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -37,6 +35,7 @@ export default {
         notes: '',
         receipt: null
       },
+      serverFormErrors: {}, // If the server-side validation fails, we'll show them here
       categories: [
         'airfare',
         'vehicle rental',
@@ -57,7 +56,7 @@ export default {
           { required: true, message: 'Please select a category', trigger: 'change' }
         ],
         receipt: [
-          { required: true, message: 'Please select a file to upload', trigger: 'change' }
+          { required: true, message: 'Please select an image to upload', trigger: 'change' }
         ]
       }
     };
@@ -65,27 +64,27 @@ export default {
   methods: {
     submitForm(formName) {
       this.$refs['receiptForm'].validate((valid) => {
-        if (valid) {
+
           const data = this.formDataObj
           this.uploadReceipt({data: data }).then((resp) => {
             this.$message({
               message: 'Receipt Uploaded Sucessfully',
               type: 'success'
             })
-            this.$emit('receipt-uploaded')
+
+            this.$emit('receipt-uploaded', resp.data.data)
+            this.$emit('receipt-form-finished')  // Let's the parent component know we're finished. In this case, it will close the dialog box.
           }).catch((err) => {
-            console.error(err)
-            this.loading = false
+            if (err.response.data.status === 400) {
+              // Server-side validation failed. Set the errors on here so the items will update the labels
+              const errors = err.response.data.invalid_fields
+              this.serverFormErrors = Object.assign({}, this.serverFormErrors, errors)
+            } else {
+              console.error(err)
+            }
           })
 
-        } else {
-          console.log('error submit!!');
-          return false;
-        }
       });
-    },
-    resetForm(formName) {
-      this.$refs['receiptForm'].resetFields();
     },
     ...mapActions([
       "uploadReceipt"

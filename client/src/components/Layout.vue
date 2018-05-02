@@ -17,6 +17,13 @@ export default {
     Navbar,
     AppMain
   },
+  created () {
+    // Do a blank request to trigger login if they aren't
+    this.$store.dispatch('user/request')
+
+    // Fetch receipts on startup
+    this.$store.dispatch('getReceipts')
+  }
 }
 </script>
 

@@ -6,11 +6,9 @@ import 'element-ui/lib/theme-chalk/index.css'
 import '@/styles/index.css'
 import 'normalize.css'
 
-import DataTables from 'vue-data-tables'
 import money from 'v-money'
 
 
 Vue.use(ElementUI, { locale })
-Vue.use(DataTables)
 
 Vue.use(money, {prefix: '$ '})
