@@ -21,6 +21,7 @@ module.exports = {
     port: '8000',
     baseUrl: 'http://localhost:8000',
     clientId: 2,
-    clientSecret: '2Iz3YOKdaplQVMfHM2QrBRf7lHOpZFH1MVZCcSBc'
-  }
+    clientSecret: '2Iz3YOKdaplQVMfHM2QrBRf7lHOpZFH1MVZCcSBc',
+    socketUrl: "ws://" + 'localhost' + ":" + '6001' + "/",
+  },
 }

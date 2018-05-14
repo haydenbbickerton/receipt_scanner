@@ -13,4 +13,6 @@ const app = new Vue({
   ...App
 })
 
+global.$vm = app
+
 export { app, router, store }

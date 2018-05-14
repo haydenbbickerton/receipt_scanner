@@ -16,7 +16,6 @@
       :visible.sync="uploadDialogVisible"
       class="receipt-dialog">
             <upload-receipt-form
-            v-on:receipt-uploaded="getReceipts"
             v-on:receipt-form-finished="uploadDialogVisible = false" v-if="uploadDialogVisible"></upload-receipt-form>
     </el-dialog>
   </div>
@@ -39,6 +38,10 @@ export default {
             uploadDialogVisible: false,
         }
     },
+    mounted () {
+    // Start listening for updates from server
+    this.$store.dispatch('socket/listenToSocket')
+  },
     computed: {
         ...mapGetters(['receipts'])
     },
@@ -49,10 +52,7 @@ export default {
                 const columns = Object.keys(this.currentTableData[0])
                 CsvExport(this.currentTableData, columns, value.value)
             })
-        },
-        ...mapActions([
-          "getReceipts"
-        ])
+        }
     }
 }
 </script>
