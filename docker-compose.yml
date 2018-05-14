@@ -10,8 +10,10 @@ services:
     image: nginx
     links:
         - db
+        - redis
     ports:
       - "8000:80"
+      - "6001:6001"
     volumes:
       - ./service:/var/www/html
     environment:
@@ -28,6 +30,7 @@ services:
       - ./client/dist:/usr/share/nginx/html
     ports:
       - "8080:80"
+
   db:
     container_name: scanner_db
     image: mysql:5.7
@@ -38,3 +41,9 @@ services:
       MYSQL_DATABASE: restapi
       MYSQL_USER: homestead
       MYSQL_PASSWORD: secret
+
+  redis:
+    container_name: scanner_redis
+    image: redis:3.2.0
+    ports:
+      - "6379:6379"
