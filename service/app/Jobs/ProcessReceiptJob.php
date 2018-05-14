@@ -1,50 +1,53 @@
 <?php
 
-namespace App\Listeners;
+namespace App\Jobs;
 
 use App\Models\Receipt;
-use App\Events\ReceiptEvents\ReceiptCreated;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Unirest\Request;
+use App\Events\ReceiptEvents\ReceiptProcessed;
 
-
-class ProcessReceipt implements ShouldQueue
+class ProcessReceiptJob extends Job
 {
+    protected $receipt;
+
     /**
-     * Create the event listener.
+     * Create a new job instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Receipt $receipt)
     {
-        //
+        $this->receipt = $receipt;
     }
 
     /**
-     * Handle the event.
+     * Execute the job.
      *
-     * @param  OrderShipped  $event
      * @return void
      */
-    public function handle(ReceiptCreated $event)
+    public function handle()
     {
-        $receipt = $event->receipt;
-        $image = $receipt->getFirstMedia("receipts");
+        $image = $this->receipt->getFirstMedia("receipts");
 
         $data = $this->sendToTaggun($image->getPath(), $image->mime_type);
         $data = json_decode($data, true);
 
-        $receipt->update([
+        $this->receipt->update([
             'date'              => array_get($data, 'date.data', null),
             'merchantName'      => array_get($data, 'merchantName.data', null),
             'taxAmount'         => array_get($data, 'taxAmount.data', null),
             'totalAmount'       => array_get($data, 'totalAmount.data', null),
         ]);
-        $receipt->save();
+
+        $saved = $this->receipt->save();
+
+        // TODO: Handle errors in the processing and saving
+        if ($saved) {
+            event(new ReceiptProcessed($this->receipt));
+        }
     }
 
-    public function sendToTaggun($filePath, $mimeType, $verbose = false) {
-
+    public function sendToTaggun($filePath, $mimeType, $verbose = false)
+    {
         $url = config('taggun.api.url') . ($verbose ? 'verbose/file' : 'simple/file');
 
         $headers = [
