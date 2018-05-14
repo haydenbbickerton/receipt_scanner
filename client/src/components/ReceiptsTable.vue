@@ -1,6 +1,6 @@
 <template>
     <el-table
-        :data="receipts"
+        :data="receiptList"
         ref="receiptsTable"
         stripe
         show-summary
@@ -15,8 +15,7 @@
             width="50"
             type="expand">
                 <template slot-scope="props">
-                    <receipt v-bind:receipt="props.row"
-                             v-on:receipt-changed="getReceipts"></receipt>
+                    <receipt v-bind:receipt="props.row"></receipt>
                 </template>
         </el-table-column>
         <el-table-column
@@ -58,7 +57,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import Receipt from '@/components/Receipt'
 
 const sortedUniques = (arr, key) => [...new Set(arr.map(x => x[key]))].sort()
@@ -79,21 +78,32 @@ export default {
     },
     computed: {
         categories() {
-            return sortedUniques(this.receipts, 'category').map(cat => ({'text': cat, 'value': cat}))
+            return sortedUniques(this.receiptList, 'category').map(cat => ({'text': cat, 'value': cat}))
         },
         merchants() {
-            return sortedUniques(this.receipts, 'merchantName').map(mer => ({'text': mer, 'value': mer}))
+            return sortedUniques(this.receiptList, 'merchantName').map(mer => ({'text': mer, 'value': mer}))
         },
         activeReceipt() {
-            return this.receipts.find(x => x.id === this.activeReceiptId)
+            return this.receipts[this.activeReceiptId]
+        },
+        receiptList() {
+            return Object.values(this.receipts)
         },
         ...mapState({
           pending: state => state.receipts.pending.receipts,
         })
     },
     methods: {
-        formatAmount: row => (row.totalAmount).toLocaleString('en-US', {style: 'currency', currency: 'USD'}),
-        formatDate: row => new Date(row.date).toLocaleDateString('en-US'),
+        formatAmount: row => {
+            if (row.totalAmount !== null) {
+                return (row.totalAmount).toLocaleString('en-US', {style: 'currency', currency: 'USD'})
+            }
+        },
+        formatDate: row => {
+            if (row.date !== null) {
+                return new Date(row.date).toLocaleDateString('en-US')
+            }
+        },
         filterHandler(value, row, column) {
             const property = column['property'];
             return row[property] === value;
@@ -104,10 +114,7 @@ export default {
         },
         tableDataModified() {
             this.$emit('table-data-modified', this.$refs['receiptsTable'].tableData)
-        },
-        ...mapActions([
-          "getReceipts"
-        ])
+        }
     }
 }
 </script>
