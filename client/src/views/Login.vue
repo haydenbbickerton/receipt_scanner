@@ -2,7 +2,7 @@
   <div class="login-container">
     <el-form autoComplete="on" :model="loginForm" ref="loginForm" label-position="left" label-width="0px"
       class="card-box login-form">
-      <h3 class="title">Riskgenius Demo</h3>
+      <h3 class="title">Receipt Scanner Demo</h3>
       <el-form-item prop="username">
         <el-input name="username" type="text" v-model="loginForm.username" autoComplete="on" placeholder="username" />
       </el-form-item>

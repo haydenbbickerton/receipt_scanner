@@ -1,7 +1,7 @@
 {
   "name": "client",
   "version": "0.1.0",
-  "description": "Riskgenius SPA",
+  "description": "Receipt Scanner SPA",
   "main": "src/index.js",
   "scripts": {
     "test": "",
