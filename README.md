@@ -1,8 +1,10 @@
 Receipt scanner is small SPA/REST API combo for consuming receipts and itemizing them for a weekly expense report.
 
--   Uploaded receipts are processed using [TAGGUN](https://www.taggun.io/), to automatically grab the purchase amount, date, store name, etc.
+-   Uploaded receipts (screenshots work too) are processed using [TAGGUN](https://www.taggun.io/), to automatically recognize the purchase amount, date, store name, etc.
 -   The user can add notes, adjust information about the receipt, and categorize it.
 -   The receipts table can be sorted and filtered in multiple ways, and exported to a CSV for download.
+
+![ui-demo](ui-demo.png)
 
 # Running It Locally
 
